@@ -39,13 +39,15 @@ class ApiClient {
      * Create an organization
      *
      * @param string $name Name of the organization
-     * @return void
+     * @return Models\Organization
      */
-    public function createOrganization(string $name) : void {
-        $this->httpClient->post(sprintf('group/%s/org', $this->groupId), [
-            'json' => [
-                'name' => $name,
-            ],
-        ]);
+    public function createOrganization(string $name) : Models\Organization {
+        return Models\Organization::fromResponse(
+            $this->httpClient->post(sprintf('group/%s/org', $this->groupId), [
+                'json' => [
+                    'name' => $name,
+                ],
+            ])
+        );
     }
 }

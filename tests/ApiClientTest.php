@@ -29,9 +29,13 @@ class ApiClientTest extends TestCase {
      */
     public function testCanCreateOrganization() : void {
         $history = [];
-        $httpClient = $this->getMockClient([new Response(200)], $history);
-        (new ApiClient('abc-123', 'token', $httpClient))->createOrganization('org');
-        $this->assertSame(['name' => 'org'], json_decode($history[0]['request']->getBody()->getContents(), true));
+        $httpClient = $this->getMockClient([new Response(200, [], '{"id":"abc-123456","name":"name","created":"2020-06-03T13:28:56.784Z"}')], $history);
+        $org = (new ApiClient('abc-123', 'token', $httpClient))->createOrganization('name');
+        $this->assertSame(['name' => 'name'], json_decode($history[0]['request']->getBody()->getContents(), true));
         $this->assertStringEndsWith('group/abc-123/org', (string) $history[0]['request']->getUri());
+
+        $this->assertSame('abc-123456', $org->getId(), 'Incorrect org ID');
+        $this->assertSame('name', $org->getName(), 'Incorrect org name');
+        $this->assertSame(1591190936, $org->getCreated()->getTimestamp(), 'Incorrect date');
     }
 }
