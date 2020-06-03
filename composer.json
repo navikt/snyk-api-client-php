@@ -42,7 +42,8 @@
         "phpstan": "vendor/bin/phpstan analyse src tests -l max",
         "psalm": "vendor/bin/psalm",
         "sa": [
-            "@phpstan"
+            "@phpstan",
+            "@psalm"
         ],
         "ci": [
             "composer validate --strict",

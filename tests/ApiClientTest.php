@@ -17,6 +17,7 @@ class ApiClientTest extends TestCase {
      * @param Response[] $responses A list of responses to return
      * @param array<array-key, array{response: Response, request: Request}> $history
      * @return HttpClient
+     * @psalm-suppress ReferenceConstraintViolation
      */
     private function getMockClient(array $responses, array &$history = []) : HttpClient {
         $handler = HandlerStack::create(new MockHandler($responses));
