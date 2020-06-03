@@ -50,4 +50,18 @@ class ApiClient {
             ])
         );
     }
+
+    /**
+     * Invite a user to an organization via email
+     *
+     * @param string $email
+     * @param bool $isAdmin
+     * @param Models\Organization $org
+     */
+    public function inviteUserToOrganization(string $email, bool $isAdmin, Models\Organization $org) : void {
+        $this->httpClient->post(sprintf('org/%s/invite', $org->getId()), ['json' => [
+            'email'   => $email,
+            'isAdmin' => $isAdmin,
+        ]]);
+    }
 }
