@@ -1,22 +1,17 @@
 <?php declare(strict_types=1);
 namespace NAVIT\Snyk;
 
-use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Psr7;
+use GuzzleHttp\{
+    Client as HttpClient,
+    Exception\ClientException,
+    Psr7,
+};
 use InvalidArgumentException;
 use RuntimeException;
 
 class ApiClient {
-    /**
-     * @var string
-     */
-    private $groupId;
-
-    /**
-     * @var HttpClient
-     */
-    private $httpClient;
+    private string $groupId;
+    private HttpClient $httpClient;
 
     /**
      * Class constructor
@@ -39,16 +34,15 @@ class ApiClient {
      * Create an organization
      *
      * @param string $name Name of the organization
-     * @return Models\Organization
+     * @return array<string,mixed>
      */
-    public function createOrganization(string $name) : Models\Organization {
-        return Models\Organization::fromResponse(
-            $this->httpClient->post(sprintf('group/%s/org', $this->groupId), [
-                'json' => [
-                    'name' => $name,
-                ],
-            ])
-        );
+    public function createOrganization(string $name) : array {
+        /** @var array<string,mixed> */
+        return json_decode($this->httpClient->post(sprintf('group/%s/org', $this->groupId), [
+            'json' => [
+                'name' => $name,
+            ],
+        ])->getBody()->getContents(), true);
     }
 
     /**
@@ -56,10 +50,11 @@ class ApiClient {
      *
      * @param string $email
      * @param bool $isAdmin
-     * @param Models\Organization $org
+     * @param string $orgId
+     * @return void
      */
-    public function inviteUserToOrganization(string $email, bool $isAdmin, Models\Organization $org) : void {
-        $this->httpClient->post(sprintf('org/%s/invite', $org->getId()), ['json' => [
+    public function inviteUserToOrganization(string $email, bool $isAdmin, string $orgId) : void {
+        $this->httpClient->post(sprintf('org/%s/invite', $orgId), ['json' => [
             'email'   => $email,
             'isAdmin' => $isAdmin,
         ]]);

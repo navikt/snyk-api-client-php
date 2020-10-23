@@ -10,7 +10,6 @@ use GuzzleHttp\{
     Psr7\Request,
     Middleware,
 };
-use NAVIT\Snyk\Models\Organization;
 
 /**
  * @coversDefaultClass NAVIT\Snyk\ApiClient
@@ -37,9 +36,9 @@ class ApiClientTest extends TestCase {
         $this->assertSame(['name' => 'name'], json_decode($history[0]['request']->getBody()->getContents(), true));
         $this->assertStringEndsWith('group/abc-123/org', (string) $history[0]['request']->getUri());
 
-        $this->assertSame('abc-123456', $org->getId(), 'Incorrect org ID');
-        $this->assertSame('name', $org->getName(), 'Incorrect org name');
-        $this->assertSame(1591190936, $org->getCreated()->getTimestamp(), 'Incorrect date');
+        $this->assertSame('abc-123456', $org['id'], 'Incorrect org ID');
+        $this->assertSame('name', $org['name'], 'Incorrect org name');
+        $this->assertSame('2020-06-03T13:28:56.784Z', $org['created'], 'Incorrect date');
     }
 
     /**
@@ -57,13 +56,10 @@ class ApiClientTest extends TestCase {
      * @covers ::inviteUserToOrganization
      */
     public function testCanInviteUserToOrg(string $email, bool $isAdmin) : void {
-        $org = $this->createConfiguredMock(Organization::class, [
-            'getId' => 'org-id',
-        ]);
         $history = [];
         $httpClient = $this->getMockClient([new Response(200)], $history);
-        (new ApiClient('abc-123', 'token', $httpClient))->inviteUserToOrganization($email, $isAdmin, $org);
+        (new ApiClient('abc-123', 'token', $httpClient))->inviteUserToOrganization($email, $isAdmin, 'some-id');
         $this->assertSame(['email' => $email, 'isAdmin' => $isAdmin], json_decode($history[0]['request']->getBody()->getContents(), true));
-        $this->assertStringEndsWith('org/org-id/invite', (string) $history[0]['request']->getUri());
+        $this->assertStringEndsWith('org/some-id/invite', (string) $history[0]['request']->getUri());
     }
 }
