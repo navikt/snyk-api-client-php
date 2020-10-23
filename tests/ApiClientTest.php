@@ -2,12 +2,14 @@
 namespace NAVIT\Snyk;
 
 use PHPUnit\Framework\TestCase;
-use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Middleware;
+use GuzzleHttp\{
+    Client as HttpClient,
+    Handler\MockHandler,
+    HandlerStack,
+    Psr7\Response,
+    Psr7\Request,
+    Middleware,
+};
 use NAVIT\Snyk\Models\Organization;
 
 /**
@@ -15,10 +17,9 @@ use NAVIT\Snyk\Models\Organization;
  */
 class ApiClientTest extends TestCase {
     /**
-     * @param Response[] $responses A list of responses to return
-     * @param array<array-key, array{response: Response, request: Request}> $history
+     * @param array<int,Response> $responses A list of responses to return
+     * @param array<int,array{response:Response,request:Request}> $history
      * @return HttpClient
-     * @psalm-suppress ReferenceConstraintViolation
      */
     private function getMockClient(array $responses, array &$history = []) : HttpClient {
         $handler = HandlerStack::create(new MockHandler($responses));

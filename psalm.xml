@@ -13,4 +13,14 @@
             <directory name="vendor"/>
         </ignoreFiles>
     </projectFiles>
-<plugins><pluginClass class="Psalm\PhpUnitPlugin\Plugin"/></plugins></psalm>
+    <issueHandlers>
+        <ReferenceConstraintViolation>
+            <errorLevel type="suppress">
+                <file name="tests/ApiClientTest.php" />
+            </errorLevel>
+        </ReferenceConstraintViolation>
+    </issueHandlers>
+    <plugins>
+        <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
+    </plugins>
+</psalm>
