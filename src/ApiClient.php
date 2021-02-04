@@ -1,15 +1,10 @@
 <?php declare(strict_types=1);
 namespace NAVIT\Snyk;
 
-use GuzzleHttp\{
-    Client as HttpClient,
-    Exception\ClientException,
-    Psr7,
-};
-use InvalidArgumentException;
-use RuntimeException;
+use GuzzleHttp\Client as HttpClient;
 
-class ApiClient {
+class ApiClient
+{
     private string $groupId;
     private HttpClient $httpClient;
 
@@ -20,7 +15,8 @@ class ApiClient {
      * @param string $token The API token
      * @param HttpClient $httpClient Pre-configured HTTP client to use
      */
-    public function __construct(string $groupId, string $token, HttpClient $httpClient = null) {
+    public function __construct(string $groupId, string $token, HttpClient $httpClient = null)
+    {
         $this->groupId    = $groupId;
         $this->httpClient = $httpClient ?: new HttpClient([
             'base_uri' => 'https://snyk.io/api/v1/',
@@ -36,7 +32,8 @@ class ApiClient {
      * @param string $name Name of the organization
      * @return array<string,mixed>
      */
-    public function createOrganization(string $name) : array {
+    public function createOrganization(string $name): array
+    {
         /** @var array<string,mixed> */
         return json_decode($this->httpClient->post(sprintf('group/%s/org', $this->groupId), [
             'json' => [
@@ -53,7 +50,8 @@ class ApiClient {
      * @param string $orgId
      * @return void
      */
-    public function inviteUserToOrganization(string $email, bool $isAdmin, string $orgId) : void {
+    public function inviteUserToOrganization(string $email, bool $isAdmin, string $orgId): void
+    {
         $this->httpClient->post(sprintf('org/%s/invite', $orgId), ['json' => [
             'email'   => $email,
             'isAdmin' => $isAdmin,
